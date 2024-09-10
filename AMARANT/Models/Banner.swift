@@ -8,7 +8,7 @@
 import Foundation
 
 struct Banner: Identifiable, Codable {
-    var id: UUID
+    var id = UUID()
     var imageUrl: String
     var link: String
     var title: String

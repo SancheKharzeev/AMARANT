@@ -10,44 +10,54 @@ import SwiftUI
 
 struct ProductDetailView: View {
     var product: Product
-    @StateObject private var viewModel = HomeViewModel()
-    
+    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var favouriteManager: FavouriteManager
+
     var body: some View {
         NavigationStack {
             ZStack {
-//                BackgroundView(topColor: .yellow, middleColor: .purple, bottomColor: .yellow)
                 Rectangle()
                     .fill(LinearGradient(colors: [ .yellow, .purple, .yellow],
                                          startPoint: .topLeading,
                                          endPoint: .bottomTrailing))
                     .ignoresSafeArea()
                 ZStack {
-                    VStack {
-                        ImageDetailProduct(selectedProduct: product)
-                        MenuDescriptionDetailProduct(product: product)
-                        
-                        Spacer()
+                    ScrollView {
+                        ZStack(alignment: .topTrailing) {
+                            VStack {
+                                ImageDetailProduct(selectedProduct: product)
+                                MenuDescriptionDetailProduct(product: product)
+                            }
+                            HStack {
+                                Spacer()
+                                // добавить в избранное
+                                ProductAddToFavButton(favouriteManager: favouriteManager, product: product, circleSize: 40, imageSize: 26)
+                            }
+                            .padding(.trailing, 10)
+                        }
+                            Spacer()
+                        }
                     }
                 }
             }
         }
     }
-}
 
-#Preview {
-    ProductDetailView(product: Product(
-        name: "Stamakort",
-        description: "Дигидрокверцетин – это мощный биофлавоноид, добывающийся из древесной части лиственницы сибирской. Обладает антиоксидантными и регенерирующими свойствами, превышающие известные природные аналоги (витамины А, C и др.) более чем в 10 раз. В комплексе с гиалуроновой кислотой, коэнзимом Q10 и витамином С усиливает свое положительное воздействие на процессы обновления клеток.\nПравильно подобранные компоненты состава стимулируют выработку коллагена и эластина, насыщают эпителий питательными элементами, ускоряют обменные процессы в организме, снимают воспалительные процессы, заживляют повреждения кожи, укрепляют ногти и волосы, улучшают текучесть крови и снимают покраснения, укрепляют стенки сосудов и капилляров, препятствуют появлению сосудистых сеточек и варикозу.\nУсиленная рецептура дигидрокверцетина \nНатуральные природные компоненты \nВысококачественное сырье Сибири и Алтая",
-        price: 132400,
-        imageUrl: "https://amarant.kz/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg",
-        category: "supplements",
-        imagesOfProduct: [detailProduct(imageUrl: "https://amarant.kz/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg"),
-                          detailProduct(imageUrl: "https://amarant.kz/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg"),
-                          detailProduct(imageUrl: "https://amarant.kz/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg")
-                         ]
-    )
-    )
-}
+//
+//#Preview {
+//    ProductDetailView(product: Product(
+//        name: "Stamakort",
+//        description: "Дигидрокверцетин – это мощный биофлавоноид, добывающийся из древесной части лиственницы сибирской. Обладает антиоксидантными и регенерирующими свойствами, превышающие известные природные аналоги (витамины А, C и др.) более чем в 10 раз. В комплексе с гиалуроновой кислотой, коэнзимом Q10 и витамином С усиливает свое положительное воздействие на процессы обновления клеток.\nПравильно подобранные компоненты состава стимулируют выработку коллагена и эластина, насыщают эпителий питательными элементами, ускоряют обменные процессы в организме, снимают воспалительные процессы, заживляют повреждения кожи, укрепляют ногти и волосы, улучшают текучесть крови и снимают покраснения, укрепляют стенки сосудов и капилляров, препятствуют появлению сосудистых сеточек и варикозу.\nУсиленная рецептура дигидрокверцетина \nНатуральные природные компоненты \nВысококачественное сырье Сибири и Алтая",
+//        price: 132400,
+//        imageUrl: "https://amarant.kz/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg",
+//        category: "supplements",
+//        imagesOfProduct: [detailProduct(imageUrl: "https://amarant.kz/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg"),
+//                          detailProduct(imageUrl: "https://amarant.kz/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg"),
+//                          detailProduct(imageUrl: "https://amarant.kz/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg")
+//                         ]
+//    ), viewModel: <#HomeViewModel#>
+//    )
+//}
 
 struct MenuDescriptionDetailProduct: View {
     var product: Product
@@ -123,41 +133,43 @@ struct ImageDetailProduct: View {
     var selectedProduct: Product
     
     var body: some View {
-        TabView {
-            ForEach(selectedProduct.imagesOfProduct) { detail in
-                if let url = URL(string: detail.imageUrl) {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                                .frame(width: 370, height: 370)
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(10)
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 360, height: 360)
-                                .cornerRadius(10)
-                        case .failure:
-                            Image(systemName: "photo")
-                                .resizable()
-                                .frame(width: 360, height: 360)
-                                .background(Color.gray.opacity(0.2))
-                                .cornerRadius(10)
-                        @unknown default:
-                            EmptyView()
+        ZStack {
+            TabView {
+                ForEach(selectedProduct.imagesOfProduct) { detail in
+                    if let url = URL(string: detail.imageUrl) {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
+                                    .frame(width: 370, height: 370)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(10)
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 360, height: 360)
+                                    .cornerRadius(10)
+                            case .failure:
+                                Image(detail.imageUrl)
+                                    .resizable()
+                                    .frame(width: 360, height: 360)
+                                    .background(Color.gray.opacity(0.2))
+                                    .cornerRadius(10)
+                            @unknown default:
+                                EmptyView()
+                            }
                         }
+                    } else {
+                        Color.red
+                            .frame(width: 100, height: 100)
+                            .cornerRadius(10)
                     }
-                } else {
-                    Color.red
-                        .frame(width: 100, height: 100)
-                        .cornerRadius(10)
                 }
             }
+            .tabViewStyle(PageTabViewStyle())
+            .frame(height: 375)
         }
-        .tabViewStyle(PageTabViewStyle())
-        .frame(height: 375)
     }
 }
 

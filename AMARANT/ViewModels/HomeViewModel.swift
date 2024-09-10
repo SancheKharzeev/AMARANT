@@ -12,77 +12,248 @@ import Combine
 class HomeViewModel: ObservableObject {
     @Published var banners: [Banner] = []
     @Published var searchText: String = ""
-    @Published var selectedCategory: String?
-    @Published var popularProducts: [Product] = []
+    @Published var selectedCategory: Category?
     @Published var categories: [Category] = []
 
     // Simulate loading data
     init() {
         loadBanners()
-        loadPopularProducts()
         loadCategories()
     }
     
+    // MARK: Баннеры
     func loadBanners() {
         banners = [
-            Banner(id: UUID(),
-                   imageUrl: "https://amarant.kz/almaty/image/cache/import_files/d0/d04e8cd19e5411eeab47d8bbc19d04f7_e90af2c09f2211eeab48d8bbc19d04f7-400x400.jpg",
+            Banner(imageUrl: "peptidy",
                    link: "", title: "ПЕПТИДЫ"),
-            Banner(id: UUID(),
-                   imageUrl: "https://amarant.kz/almaty/image/cache/import_files/5d/5d794c5bbbf811edab36d8bbc19d04f7_8dd751caa08f11eeab48d8bbc19d04f7-400x400.jpeg",
+            Banner(imageUrl: "trace",
                    link: "", title: "Trace Minerals"),
-            Banner(id: UUID(),
-                   imageUrl: "https://amarant.kz/almaty/image/cache/import_files/52/526e4d0f627911edaf610026182c78e3_fae35630320a11efab53d8bbc19d04f7-400x400.jpeg",
+            Banner(imageUrl: "orvi",
                    link: "", title: "Против ОРВИ"),
-            Banner(id: UUID(),
-                   imageUrl: "https://amarant.kz/astana/image/cache/import_files/68/68a819b61ced11efab51d8bbc19d04f7_9ca910cc295a11efab51d8bbc19d04f7-600x600.jpeg",
+            Banner(imageUrl: "silverceuticals",
                    link: "", title: "НАНО-СЕРЕБРО")
         ]
     }
-    
-    func loadPopularProducts() {
-        popularProducts = [
-            createProduct(name: "EVITON Дигидрокверцитин", description: "EVITON Дигидрокверцитин+для МОЛОДОСТИ И КРАСОТЫ 30 капсул.", price: 3150, imageUrl: "https://amarant.kz/astana/image/cache/import_files/00/003ceade0d0611efab51d8bbc19d04f7_56072aa0295b11efab51d8bbc19d04f7-400x400.jpeg", category: "supplements"),
-            createProduct(name: "REFOOD Дрожжи пищевые неактивные в хлопьях PREMIUM 100 гр.", description: "Fresh apple", price: 1990, imageUrl: "https://amarant.kz/astana/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg", category: ""),
-            createProduct(name: "Lunn Чёрная соль 200 гр.", description: "Fresh banana", price: 990, imageUrl: "https://amarant.kz/astana/image/cache/import_files/14/146282550d1e11efab51d8bbc19d04f7_f347f4bb229a11efab51d8bbc19d04f7-220x220.jpeg", category: ""),
-            createProduct(name: "Fit Parad №8 Заменитель сахара на основе", description: "Fresh orange", price: 1490, imageUrl: "https://amarant.kz/astana/image/cache/import_files/9f/9f7c5157257c11e793fd001966967e40_23cf3d4ba08511eeab48d8bbc19d04f7-220x220.jpg", category: ""),
-            createProduct(name: "Apple", description: "Fresh apple", price: 1990, imageUrl: "https://amarant.kz/astana/image/cache/import_files/f7/f70b3ed84adb11edaf5b0026182c78e3_11eba0d0a08711eeab48d8bbc19d04f7-220x220.jpeg", category: ""),
-            createProduct(name: "Banana", description: "Fresh banana", price: 990, imageUrl: "https://amarant.kz/astana/image/cache/import_files/14/146282550d1e11efab51d8bbc19d04f7_f347f4bb229a11efab51d8bbc19d04f7-220x220.jpeg", category: ""),
-            createProduct(name: "Acvelon Genius Kids 30 мл. (для нервной системы)", description: "Fresh orange", price: 1490, imageUrl: "https://amarant.kz/astana/image/cache/import_files/c2/c2325b39ba8011eeab49d8bbc19d04f7_8f8e3d3ec66d11eeab4ad8bbc19d04f7-220x220.png", category: ""),
-            createProduct(name: "A BIO Витамин В9 30 мл", description: "Fresh orange", price: 2360, imageUrl: "https://amarant.kz/astana/image/cache/import_files/1a/1a0b1158959111eeab47d8bbc19d04f7_ab656f7bbf2e11eeab4ad8bbc19d04f7-220x220.png", category: ""),
-            createProduct(name: "4Life Трансфер Фактор РиоВида Берст (15 саше)", description: "Fresh orange", price: 23490, imageUrl: "https://amarant.kz/astana/image/cache/import_files/7d/7d0f8edcb55411eeab49d8bbc19d04f7_8e58ec0c23d711efab51d8bbc19d04f7-220x220.jpeg", category: "")
-        ]
-    }
-    
-    func createProduct(name: String, description: String, price: Int, imageUrl: String, category: String) -> Product {
-        let detailImages = Array(arrayLiteral: detailProduct(imageUrl: imageUrl), detailProduct(imageUrl: imageUrl), detailProduct(imageUrl: imageUrl), detailProduct(imageUrl: imageUrl))
-        let descriptionImages = "Дигидрокверцетин – это мощный биофлавоноид, добывающийся из древесной части лиственницы сибирской. Обладает антиоксидантными и регенерирующими свойствами, превышающие известные природные аналоги (витамины А, C и др.) более чем в 10 раз. В комплексе с гиалуроновой кислотой, коэнзимом Q10 и витамином С усиливает свое положительное воздействие на процессы обновления клеток.\nПравильно подобранные компоненты состава стимулируют выработку коллагена и эластина, насыщают эпителий питательными элементами, ускоряют обменные процессы в организме, снимают воспалительные процессы, заживляют повреждения кожи, укрепляют ногти и волосы, улучшают текучесть крови и снимают покраснения, укрепляют стенки сосудов и капилляров, препятствуют появлению сосудистых сеточек и варикозу.\nУсиленная рецептура дигидрокверцетина \nНатуральные природные компоненты \nВысококачественное сырье Сибири и Алтая"
-        return Product(name: name, description: descriptionImages, price: price, imageUrl: imageUrl, category: category, imagesOfProduct: detailImages)
-    }
 
+    // MARK: Категории
     func loadCategories() {
         categories = [
-            Category(name: "Бакалея", imageUrl: "bakaleya" ),
-            Category(name: "Бытовая химия", imageUrl: "bytovaya-himiya"),
-            Category(name: "Веганское, \nрастительное", imageUrl: "veganskie-tovary"),
-            Category(name: "Завтраки", imageUrl: "breakfast"),
-            Category(name: "Замороженные продукты", imageUrl: "zamorozhennye-produkty"),
-            Category(name: "Здоровье", imageUrl: "zdorove"),
-            Category(name: "Консервация", imageUrl: "konservaciya"),
-            Category(name: "Красота и гигиена", imageUrl: "krasota-i-zdorove"),
-            Category(name: "Крупы, макароны, мука", imageUrl: "krupy-makarony-krupa"),
-            Category(name: "Масла и соусы", imageUrl: "maslo-sousy"),
-            Category(name: "Молочные продукты и яйцо", imageUrl: "molochnye-produkty-i-yajco"),
-            Category(name: "Мороженое", imageUrl: "morozhennoe"),
-            Category(name: "Напитки и детское питание", imageUrl: "napitki"),
-            Category(name: "Орехи, чипсы и снеки", imageUrl: "orekhi-chipsy-sneki"),
-            Category(name: "Пасты и Урбечи", imageUrl: "urbechi"),
-            Category(name: "Сладости и здоровые десерты", imageUrl: "sladosti-i-zdorovye-deserty"),
-            Category(name: "Сыры", imageUrl: "syry"),
-            Category(name: "Хлеб и выпечка", imageUrl: "hleb-i-vypechka"),
-            Category(name: "Чай, кофе, какао", imageUrl: "kofe-chaj-kakao")
+            Category(
+                name: "Бакалея",
+                categImageUrl: "bakaleya",
+                subcategories: [
+                    Subcategory(name: "Заменитель сахара"),
+                    Subcategory(name: "Ингредиенты для выпечки"),
+                    Subcategory(name: "Сахар, соль, специи")
+                ]
+            ),
+            Category(
+                name: "Бытовая химия",
+                categImageUrl: "bytovaya-himiya",
+                subcategories: [
+                    Subcategory(name: "Бытовая химия и товары для дома"),
+                    Subcategory(name: "Средства для стирки")
+                ]
+            ),
+            Category(
+                name: "Веганское, растительное",
+                categImageUrl: "veganskie-tovary",
+                subcategories: [
+                    Subcategory(name: "Вместо молока"),
+                    Subcategory(name: "Паштеты"),
+                    Subcategory(name: "Растительный белок")
+                ]
+            ),
+            Category(
+                name: "Завтраки",
+                categImageUrl: "breakfast",
+                subcategories: [
+                    Subcategory(name: "Отруби, семена и клетчатка"),
+                    Subcategory(name: "Сухие завтраки, хлопья, мюсли")
+                ]
+            ),
+            Category(
+                name: "Замороженные продукты",
+                categImageUrl: "zamorozhennye-produkty",
+                subcategories: [
+                    Subcategory(name: "Замороженные фрукты, овощи, грибы"),
+                    Subcategory(name: "Мясная продукция"),
+                    Subcategory(name: "Пельмени, манты, вареники, выпечка")
+                ]
+            ),
+            Category(
+                name: "Здоровье",
+                categImageUrl: "zdorove",
+                subcategories: [
+                    Subcategory(name: "Витамины, БАД"),
+                    Subcategory(name: "Для детей"),
+                    Subcategory(name: "Спортивное питание"),
+                    Subcategory(name: "Фитосвечи")
+                ]
+            ),
+            Category(
+                name: "Консервация",
+                categImageUrl: "konservaciya",
+                subcategories: [
+                    Subcategory(name: "Варенье и джемы"),
+                    Subcategory(name: "Оливки и маслины"),
+                    Subcategory(name: "Паштеты и тушенка"),
+                    Subcategory(name: "Рыбные консервы"),
+                    Subcategory(name: "Томатные пасты"),
+                    Subcategory(name: "Уксус"),
+                    Subcategory(name: "Фрукты, овощи, морские водоросли")
+                ]
+            ),
+            Category(
+                name: "Красота и гигиена",
+                categImageUrl: "krasota-i-zdorove",
+                subcategories: [
+                    Subcategory(name: "Бомбочки, пена и соль для ванн"),
+                    Subcategory(name: "Гели для душа"),
+                    Subcategory(name: "Косметика и уход"),
+                    Subcategory(name: "Мочалки, щетки, пилки")
+                ]
+            ),
+            Category(
+                name: "Крупы, макароны, мука",
+                categImageUrl: "krupy-makarony-krupa",
+                subcategories: [
+                    Subcategory(name: "Каши"),
+                    Subcategory(name: "Крупы"),
+                    Subcategory(name: "Макароны"),
+                    Subcategory(name: "Мука"),
+                    Subcategory(name: "Супы")
+                ]
+            ),
+            Category(
+                name: "Масла и соусы",
+                categImageUrl: "maslo-sousy",
+                subcategories: [
+                    Subcategory(name: "Масло ГХИ и сливочное"),
+                    Subcategory(name: "Растительные масла"),
+                    Subcategory(name: "СОУСЫ")
+                ]
+            ),
+            Category(
+                name: "Молочные продукты и яйцо",
+                categImageUrl: "molochnye-produkty-i-yajco",
+                subcategories: [
+                    Subcategory(name: "Из козьего, кобыльего и овечьего молока"),
+                    Subcategory(name: "Молоко, кефир, йогурт")
+                ]
+            ),
+            Category(
+                name: "Мороженое",
+                categImageUrl: "morozhennoe",
+                subcategories: [
+                    Subcategory(name: "Мороженое")
+                ]
+            ),
+            Category(
+                name: "Напитки и детское питание",
+                categImageUrl: "napitki",
+                subcategories: [
+                    Subcategory(name: "Детское питание и смеси"),
+                    Subcategory(name: "Комбуча"),
+                    Subcategory(name: "Компоты и кисели"),
+                    Subcategory(name: "Минеральная вода"),
+                    Subcategory(name: "Соки, смузи")
+
+                ]
+            ),
+            Category(
+                name: "Орехи, чипсы и снеки",
+                categImageUrl: "orekhi-chipsy-sneki",
+                subcategories: [
+                    Subcategory(name: "Орехи"),
+                    Subcategory(name: "Попкорн"),
+                    Subcategory(name: "Снеки"),
+                    Subcategory(name: "Сухофрукты"),
+                    Subcategory(name: "Чипсы")
+                ]
+            ),
+            Category(
+                name: "Пасты и Урбечи",
+                categImageUrl: "urbechi",
+                subcategories: [
+                    Subcategory(name: "Пасты и Урбечи")
+                ]
+            ),
+            Category(
+                name: "Сладости и здоровые десерты",
+                categImageUrl: "sladosti-i-zdorovye-deserty",
+                subcategories: [
+                    Subcategory(name: "Вафли и пряники"),
+                    Subcategory(name: "Конфеты и карамель"),
+                    Subcategory(name: "Мармелад, зефир, пастила"),
+                    Subcategory(name: "Мед, сиропы и сгущенка"),
+                    Subcategory(name: "Печенье"),
+                    Subcategory(name: "Пирожные и десерты"),
+                    Subcategory(name: "Чурчхела"),
+                    Subcategory(name: "Шоколад и батончики")
+                ]
+            ),
+            Category(
+                name: "Сыры",
+                categImageUrl: "syry",
+                subcategories: [
+                    Subcategory(name: "Сыры")
+                ]
+            ),
+            Category(
+                name: "Хлеб и выпечка",
+                categImageUrl: "hleb-i-vypechka",
+                subcategories: [
+                    Subcategory(name: "Выпечка и пироги"),
+                    Subcategory(name: "Хлебцы, сухарики, крекеры")
+                ]
+            ),
+            Category(
+                name: "Чай, кофе, какао",
+                categImageUrl: "kofe-chaj-kakao",
+                subcategories: [
+                    Subcategory(name: "Чай, кофе, какао")
+                ]
+            )
         ]
     }
+    
+    // MARK: Города и адреса
+    @Published var selectedCity: City? = nil
+    @Published var selectedAddress: Store? = nil
+    @Published var cities: [City] = [
+        City(name: "Астана", stores: [
+            Store(address: "Улица Алихан Бокейхан, 32"),
+            Store(address: "Улица Достык, 1"),
+            Store(address: "Амангельды Иманова улица, 18Б")
+        ]),
+        City(name: "Алматы", stores: [
+            Store(address: "2-й микрорайон, 55Б"),
+            Store(address: "Улица Радостовца, 323а к9"),
+            Store(address: "Улица Навои, 310"),
+            Store(address: "Проспект Достык, 36")
+        ]),
+        City(name: "Тараз", stores: [
+            Store(address: "Проспект Абая, 132")
+        ]),
+        City(name: "Шымкент", stores: [
+            Store(address: "​Улица Казыбек Би, 30"),
+            Store(address: "​17-й микрорайон, 16"),
+            Store(address: "​Проспект Момышулы, 8а")
+        ])
+    ]
+    
+    @Published var isPresentedHomeView: Bool = false
+    @Published var isStoreSelected: Bool = false
+    @Published var isShowingCatalog: Bool = false
+    @Published var isShowingCategory: Bool = false
+    @Published var isShowingDetail = false
+    @Published var isShowingCatalogProduct = false
+    @Published var isShowingFavouriteProduct = false
+
+
+    @Published var selectedProduct: Product?
+
 }
 
 

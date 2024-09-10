@@ -14,8 +14,9 @@ struct Product: Identifiable, Codable {
     var description: String
     var price: Int
     var imageUrl: String
-    var category: String
+    var subCategory: String
     var imagesOfProduct: [detailProduct]
+    var articul: Int
 }
 
 struct detailProduct: Identifiable, Codable {

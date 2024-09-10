@@ -9,27 +9,50 @@ import Foundation
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var viewModel = HomeViewModel()
-    var columns = [GridItem(.adaptive(minimum: 160), spacing: 20)]
+    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var serverDataModel: ServerDataModel
+    @ObservedObject var favouriteManager: FavouriteManager
     
+    // Фильтрация продуктов по выбранной категории (по подкатегориям)
+    private func filteredProducts(for category: Category) -> [Product] {
+        let subcategoryNames = category.subcategories.map { $0.name }
+        return serverDataModel.catalogProducts.filter { subcategoryNames.contains($0.subCategory) }
+    }
     
     var body: some View {
         NavigationStack {
             ZStack {
                 BackgroundView(topColor: .orange, middleColor: .purple, bottomColor: .white)
                 ZStack {
-                    ScrollView {
-                        BannerView()
-                        SearchAndCatalogView()
-                        TitleTextView(titleText: "Популярные товары")
-                        PopularProductView()
-                        CategoryCard()
-                            .padding()
-                    }
-                    .padding(.bottom, 50)
-                    GeometryReader { geometry in
-                        VStack {
+                    VStack {
+                        HStack {
+                            Image(systemName: "location.square.fill")
+                                .foregroundStyle(.white)
+                                .padding(.leading, 10)
+                            if let city = viewModel.selectedCity {
+                                Text("г. \(city.name). ")
+                                    .font(.callout)
+                                    .foregroundStyle(.white)
+                            }
+                            if let adress = viewModel.selectedAddress {
+                                Text("\(adress.address)")
+                                    .font(.callout)
+                                    .foregroundStyle(.white)
+                            }
                             Spacer()
+                        }
+                        .padding(.top, 10)
+                        BannerView(viewModel: viewModel, serverDataModel: serverDataModel, favouriteManager: favouriteManager)
+                        SearchAndCatalogView(viewModel: viewModel)
+                        ScrollView {
+                            PopularProductView(viewModel: viewModel, serverDataModel: serverDataModel, favouriteManager: favouriteManager)
+                            CategoryCard(viewModel: viewModel)
+                                .padding()
+                        }
+                        .frame(height: 450)
+                        Spacer()
+                        // нижняя панель меню
+                        GeometryReader { geometry in
                             HStack {
                                 ButtonNavigBarView(image: Image(systemName: "person.crop.circle.fill"), action: {
                                     //code action
@@ -37,11 +60,11 @@ struct HomeView: View {
                                 .padding(.leading)
                                 Spacer()
                                 ButtonNavigBarView(image: Image(systemName: "fork.knife"), action: {
-                                    //code action
+                                    viewModel.isShowingCatalog = true
                                 }, text: "Каталог")
                                 Spacer()
                                 ButtonNavigBarView(image: Image(systemName: "heart.fill"), action: {
-                                    //code action
+                                    viewModel.isShowingFavouriteProduct = true
                                 }, text: "Избранное")
                                 Spacer()
                                 ButtonNavigBarView(image: Image(systemName: "house.fill"), action: {
@@ -55,82 +78,111 @@ struct HomeView: View {
                             }
                             .padding()
                             .background(Color.productPink)
-//                            .frame(width: geometry.size.width*0.98, height: geometry.size.height*0.1)
                             .clipShape(Capsule())
                             .padding(.horizontal, 5)
                         }
+                        .frame(height: 60)
                     }
                 }
             }
         }
-    }
-}
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
-    }
-}
-
-
-struct BackgroundView: View {
-    var topColor: Color
-    var middleColor: Color
-    var bottomColor: Color
-    @State private var animateGradient: Bool = false
-    
-    var body: some View {
-        Rectangle()
-            .fill(LinearGradient(colors: [ topColor, middleColor, bottomColor],
-                                 startPoint: .topLeading,
-                                 endPoint: .bottomTrailing))
-            .ignoresSafeArea()
-            .hueRotation(.degrees(animateGradient ? 45 : 0))
-            .onAppear {
-                withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
-                    animateGradient.toggle()
+        .navigationDestination(isPresented: $viewModel.isShowingCatalog) {
+            CatalogView(viewModel: viewModel)
+        }
+        .navigationDestination(isPresented: $viewModel.isShowingFavouriteProduct) {
+            FavoriteProductsView(favouriteManager: favouriteManager, serverDataModel: serverDataModel)
+        }
+        // при нажатии на категорию CategoryCard срабатывает переключатель isShowingCategory на TRUE и открывается Лист с ProductDetailView
+        .navigationDestination(isPresented: $viewModel.isShowingCategory) {
+            let columns = [GridItem(.adaptive(minimum: 120), spacing: 20)]
+            NavigationStack {
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 12, pinnedViews: .sectionHeaders) {
+                        Section {
+                            if let selectedCategory = viewModel.selectedCategory {                        ForEach(filteredProducts(for: selectedCategory), id: \.id) {
+                                product in
+                                ProductCard(product: product, favouriteManager: favouriteManager, viewModel: viewModel)
+                                    .onTapGesture {
+                                        viewModel.selectedProduct = product
+                                        viewModel.isShowingCatalogProduct = true
+                                    }
+                            }
+                            }
+                        }
+                    }
                 }
             }
-    }
-}
-
-struct SearchAndCatalogView: View {
-    @StateObject private var viewModel = HomeViewModel()
-    
-    var body: some View {
-        HStack{
-            HStack{
-                // Поле для поиска товаров
-                Image(systemName: "magnifyingglass")
-                TextField("Найти продукты", text: $viewModel.searchText)
+            .navigationDestination(isPresented: $viewModel.isShowingCatalogProduct) {
+                if let selectedProductDetail = viewModel.selectedProduct {
+                    ProductDetailView(product: selectedProductDetail, viewModel: viewModel, favouriteManager: favouriteManager)
+                } else {
+                    Text("No product selected")
+                }
             }
-            .padding(.all, 20)
-            .background(.white)
-            .clipShape(.capsule)
-            .padding(.leading, 12)
             
-            // Кнопка для выбора категории товаров
-            Button(action: {
-                // Действие для выбора категории
-            }) {
-                Text("Категории")
-                    .frame(width: 120, height: 62)
-                    .foregroundColor(.white)
-                    .background(Color(.productPink))
-                    .cornerRadius(8)
-                    .padding(.trailing, 8)
-            }
         }
-        .padding(.vertical, 10)
     }
 }
-
-struct ButtonNavigBarView: View {
-    let image: Image
-    let action: () -> Void
-    let text: String
     
-    var body: some View {
+    
+    struct BackgroundView: View {
+        var topColor: Color
+        var middleColor: Color
+        var bottomColor: Color
+        @State private var animateGradient: Bool = false
+        
+        var body: some View {
+            Rectangle()
+                .fill(LinearGradient(colors: [ topColor, middleColor, bottomColor],
+                                     startPoint: .topLeading,
+                                     endPoint: .bottomTrailing))
+                .ignoresSafeArea()
+                .hueRotation(.degrees(animateGradient ? 45 : 0))
+                .onAppear {
+                    withAnimation(.easeInOut(duration: 5).repeatForever(autoreverses: true)) {
+                        animateGradient.toggle()
+                    }
+                }
+        }
+    }
+    
+    struct SearchAndCatalogView: View {
+        @ObservedObject var viewModel: HomeViewModel
+        
+        var body: some View {
+            HStack{
+                HStack{
+                    // Поле для поиска товаров
+                    Image(systemName: "magnifyingglass")
+                    TextField("Найти продукты", text: $viewModel.searchText)
+                }
+                .padding(.all, 20)
+                .background(.white)
+                .clipShape(.capsule)
+                .padding(.leading, 12)
+                
+                // Кнопка для выбора категории товаров
+                Button(action: {
+                    viewModel.isShowingCatalog = true
+                }) {
+                    Text("Категории")
+                        .frame(width: 120, height: 62)
+                        .foregroundColor(.white)
+                        .background(Color(.productPink))
+                        .cornerRadius(8)
+                        .padding(.trailing, 8)
+                }
+            }
+            .padding(.vertical, 8)
+        }
+    }
+    
+    struct ButtonNavigBarView: View {
+        let image: Image
+        let action: () -> Void
+        let text: String
+        
+        var body: some View {
             VStack {
                 Button(action: action) {
                     image
@@ -143,34 +195,11 @@ struct ButtonNavigBarView: View {
                 }
                 Text(text)
                     .foregroundStyle(.white)
-                    .font(.caption2)
+                    .font(.caption)
                     .lineLimit(1)
                     .fontDesign(.rounded)
-                    .minimumScaleFactor(0.5)
-            }
-    }
-}
-
-struct TitleTextView: View {
-    let titleText: String
-    var body: some View {
-        ZStack {
-            HStack {
-                RoundedRectangle(cornerRadius: 5)
-                    .frame(width: 190, height: 30)
-                    .foregroundStyle(.productPink)
-                    .shadow(radius: 3)
-                    .padding(.leading, 12)
-                Spacer()
-            }
-            HStack {
-                Text(titleText)
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .padding(.leading, 21)
-                    .shadow(radius: 3)
-                Spacer()
+                    .minimumScaleFactor(0.9)
             }
         }
     }
-}
+

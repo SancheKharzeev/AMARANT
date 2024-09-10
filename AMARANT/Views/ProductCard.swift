@@ -10,90 +10,92 @@ import SwiftUI
 
 struct ProductCard: View {
     var product: Product
-    var favouriteManager = FavouriteManager()
+    @ObservedObject var favouriteManager: FavouriteManager
     @State private var isFavorite = false
-    
+    @ObservedObject var viewModel: HomeViewModel
     
     var body: some View {
-        
-        ZStack(alignment: .topTrailing) {
-            ZStack(alignment: .bottom) {
-                Rectangle()
-                    .fill(LinearGradient(colors: [.white, .white, .white], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .frame(width: 180, height: 300)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .shadow(radius: 3)
-                
-                VStack {
-                    ZStack(alignment: .top) {
-                        Rectangle()
-                            .fill(.white)
-                            .frame(width: 170, height: 170)
-                            .cornerRadius(10)
-                        
-                        if URL(string: product.imageUrl) != nil {
-                            AsyncImage(url: URL(string: product.imageUrl)) { phase in
-                                switch phase {
-                                case .empty:
-                                    ProgressView()
-                                        .frame(width: 170, height: 170)
-                                        .background(Color.gray.opacity(0.2))
-                                        .cornerRadius(10)
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 170, height: 170)
-                                        .cornerRadius(10)
-                                case .failure:
-                                    Image(product.imageUrl)
-                                        .resizable()
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                        .frame(width: 170, height: 170)
-                                        .scaledToFit()
-                                    
-                                @unknown default:
-                                    EmptyView()
-                                }
-                            }
-                        } else {
-                            Color.red
-                                .frame(width: 100, height: 100)
+        NavigationStack {
+            ZStack(alignment: .topTrailing) {
+                ZStack(alignment: .bottom) {
+                    Rectangle()
+                        .fill(LinearGradient(colors: [.white, .white, .white], startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .frame(width: 180, height: 300)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(radius: 3)
+                    
+                    VStack {
+                        ZStack(alignment: .top) {
+                            Rectangle()
+                                .fill(.white)
+                                .frame(width: 170, height: 170)
                                 .cornerRadius(10)
+                            
+                            if URL(string: product.imageUrl) != nil {
+                                AsyncImage(url: URL(string: product.imageUrl)) { phase in
+                                    switch phase {
+                                    case .empty:
+                                        ProgressView()
+                                            .frame(width: 170, height: 170)
+                                            .background(Color.gray.opacity(0.2))
+                                            .cornerRadius(10)
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 170, height: 170)
+                                            .cornerRadius(10)
+                                    case .failure:
+                                        Image(product.imageUrl)
+                                            .resizable()
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .frame(width: 170, height: 170)
+                                            .scaledToFit()
+                                        
+                                    @unknown default:
+                                        EmptyView()
+                                    }
+                                }
+                            } else {
+                                Color.red
+                                    .frame(width: 100, height: 100)
+                                    .cornerRadius(10)
+                            }
+                            HStack {
+                                Spacer()
+                                // добавить в избранное
+                                ProductAddToFavButton(favouriteManager: favouriteManager, product: product, circleSize: 30, imageSize: 22)
+                            }
                         }
-                        HStack {
-                            Spacer()
-                            ProductAddToFavButton(product: product)
+                        VStack(alignment: .leading) {
+                            Text(product.name)
+                                .bold()
+                            HStack {
+                                Text("\(product.price)")
+                                    .font(.subheadline)
+                                Image(systemName: "tengesign")
+                                    .resizable()
+                                    .frame(width: 10, height: 13)
+                            }
+                            // добавить в корзину
+                            ProductAddToCartButton(product: product)
                         }
-                    }
-                    VStack(alignment: .leading) {
-                        Text(product.name)
-                            .bold()
-                        HStack {
-                            Text("\(product.price)")
-                                .font(.subheadline)
-                            Image(systemName: "tengesign")
-                                .resizable()
-                                .frame(width: 10, height: 13)
-                        }
+                        .padding(8)
+                        .frame(width: 170, alignment: .leading)
+                        .background(.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(radius: 3)
+                        Spacer()
                         
-                        ProductAddToCartButton(product: product)
+                        
                     }
-                    .padding(8)
-                    .frame(width: 170, alignment: .leading)
-                    .background(.ultraThinMaterial)
+                    .frame(width: 175, height: 300)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .shadow(radius: 3)
-                    Spacer()
-                    
-                    
                 }
-                .frame(width: 170, height: 300)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
             }
-        }
-        .onAppear {
-            isFavorite = favouriteManager.checkIfFavorite(product: product)
+            .onAppear {
+                isFavorite = favouriteManager.checkIfFavorite(product: product)
+            }
         }
     }
 }
@@ -127,10 +129,13 @@ struct ProductAddToCartButton: View {
     }
 }
 
+// MARK: AddToFav Button
 struct ProductAddToFavButton: View {
-    var favouriteManager = FavouriteManager()
+    @ObservedObject var favouriteManager: FavouriteManager
     @State private var isFavorite = false
     var product: Product
+    var circleSize: CGFloat
+    var imageSize: CGFloat
     
     var body: some View {
         Button {
@@ -143,28 +148,25 @@ struct ProductAddToFavButton: View {
         } label: {
             ZStack{
                 Circle()
-                    .frame(width: 30)
+                    .frame(width: circleSize)
                     .foregroundStyle(isFavorite ?
-                                     LinearGradient(colors: [.yellow, .yellow], startPoint: .topLeading, endPoint: .bottomTrailing) :
-                                        LinearGradient(colors: [.purple, .yellow], startPoint: .topLeading, endPoint: .bottomTrailing)
+                                     LinearGradient(colors: [.white, .gold], startPoint: .topLeading, endPoint: .bottomTrailing) :
+                                        LinearGradient(colors: [.gold, .yellow], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
                 
                 
                 Image(systemName: "heart.fill")
                     .resizable()
-                    .frame(width: 22, height: 22)
+                    .frame(width: imageSize, height: imageSize)
                     .scaledToFit()
-                    .padding(12)
                     .foregroundColor(isFavorite ? .purple : .white)
-                    .padding(.top, 3)
-                
             }
         }
     }
 }
 
-
-class FavouriteManager {
+//MARK: FavouriteManager
+class FavouriteManager: ObservableObject {
     func addToFavorites(product: Product) {
         var favorites = UserDefaults.standard.array(forKey: "favorites") as? [String] ?? []
         favorites.append(product.name)
@@ -183,5 +185,9 @@ class FavouriteManager {
     func checkIfFavorite(product: Product) -> Bool {
         let favorites = UserDefaults.standard.array(forKey: "favorites") as? [String] ?? []
         return favorites.contains(product.name)
+    }
+    
+    func getFavorites() -> [String] {
+            return UserDefaults.standard.array(forKey: "favorites") as? [String] ?? []
     }
 }

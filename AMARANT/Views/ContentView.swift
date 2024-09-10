@@ -8,13 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var serverDataModel: ServerDataModel
+    @ObservedObject var favouriteManager: FavouriteManager
+
+    
     var body: some View {
         NavigationStack {
-           HomeView()
+            if viewModel.isStoreSelected {
+                HomeView(viewModel: viewModel, serverDataModel: serverDataModel, favouriteManager: favouriteManager)
+            } else {
+                SelectStoreView(viewModel: viewModel)
+            }
         }
     }
-}
-
-#Preview {
-    ContentView()
 }
