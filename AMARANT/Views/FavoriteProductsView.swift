@@ -57,8 +57,13 @@ struct FavoriteProductsView: View {
                                 Text(product.name)
                                     .font(.headline)
                                 Spacer()
-                                Text("\(product.price) руб.")
-                                    .font(.subheadline)
+                                HStack {
+                                    Text(String(format: "%.2f", product.price))
+                                        .font(.subheadline)
+                                    Image(systemName: "tengesign")
+                                        .resizable()
+                                        .frame(width: 10, height: 13)
+                                }
                             }
                         }
                         .swipeActions {

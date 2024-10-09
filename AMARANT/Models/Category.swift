@@ -9,6 +9,7 @@ import Foundation
 
 struct Category: Identifiable, Codable {
     var id = UUID()
+    var categoryID: String
     var name: String
     var categImageUrl: String
     var subcategories: [Subcategory]
@@ -16,6 +17,7 @@ struct Category: Identifiable, Codable {
 
 struct Subcategory: Identifiable, Codable, Hashable {
     var id = UUID()
+    var subcategoryID: String
     var name: String
 }
 

@@ -55,28 +55,28 @@ struct SelectStoreView: View {
                     }
                     
                     // Отображение выбранного адреса
-                    styledText(text: "Гастромаркет по адресу: \n\(selectedCity.name)", textColor: .black, txtSize: .headline, backColor: Color.clear.gradient)
+                    styledText(text: "Гастромаркет по адресу: \n\(selectedCity.name)", textColor: .black, txtSize: .title2, backColor: Color.clear.gradient, paddSize: 5)
                 }
              
                 if let selectedAddress = viewModel.selectedAddress {
-                    styledText(text: "\(selectedAddress.address)", textColor: .black, txtSize: .body, backColor: Color.clear.gradient)
-                        .padding(.bottom, 20)
+                    styledText(text: "\(selectedAddress.address)", textColor: .black, txtSize: .title2, backColor: Color.clear.gradient, paddSize: 5)
                     Button(action: {
                         // action button
                         viewModel.isStoreSelected = true
                     }, label: {
-                        styledText(text: "Далее", textColor: .white, txtSize: .headline, backColor: Color.productPink.gradient)
+                        styledText(text: "Далее", textColor: .white, txtSize: .headline, backColor: Color.productPink.gradient, paddSize: 20)
                     })
+                    .padding(.bottom, 8)
                 }
             }
         }
     }
     @ViewBuilder
-    func styledText(text: String, textColor: Color, txtSize: Font, backColor: AnyGradient) -> some View {
+    func styledText(text: String, textColor: Color, txtSize: Font, backColor: AnyGradient, paddSize: CGFloat) -> some View {
         Text(text)
             .font(txtSize)
             .multilineTextAlignment(.center)
-            .padding(8)
+            .padding(paddSize)
             .foregroundColor(textColor)
             .background(backColor)
             .clipShape(RoundedRectangle(cornerRadius: 8))

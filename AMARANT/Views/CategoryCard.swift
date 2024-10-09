@@ -34,7 +34,7 @@ struct CategoryCard: View {
                                         .fill(.white)
                                         .frame(width: 170, height: 170)
                                         .cornerRadius(10)
-                                    //картинка и кнопка
+                                    //при нажатии на картинку с категорией срабатывает переключатель isShowingCategory
                                     Button {
                                         viewModel.isShowingCategory = true
                                         viewModel.selectedCategory = category
@@ -84,24 +84,4 @@ struct CategoryCard: View {
 }
 
 
-// Представление для одной категории
-struct CategoryView: View {
-    let category: Category
-    @ObservedObject var viewModel: HomeViewModel
-    
-    var body: some View {
-        VStack {
-            Text("Catalog")
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(8)
-            
-            Text(category.name)
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(8)
-        }
-    }
-}
+

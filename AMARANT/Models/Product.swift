@@ -12,11 +12,15 @@ struct Product: Identifiable, Codable {
     var id = UUID()
     var name: String
     var description: String
-    var price: Int
+    var price: Double 
     var imageUrl: String
-    var subCategory: String
+    var subCategoryName: String
+    var subCategoryID: String
     var imagesOfProduct: [detailProduct]
-    var articul: Int
+    var articul: String
+    var count: Double
+    var storageName: String
+    var storageID: String
 }
 
 struct detailProduct: Identifiable, Codable {

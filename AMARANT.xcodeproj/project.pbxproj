@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		E225DAE02C90708100A28025 /* FavoriteProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E225DADF2C90708100A28025 /* FavoriteProductsView.swift */; };
+		E2B034F42CA28F680023D8FD /* ProductResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B034F32CA28F580023D8FD /* ProductResponse.swift */; };
+		E2B034F62CA2D8050023D8FD /* products.json in Resources */ = {isa = PBXBuildFile; fileRef = E2B034F52CA2D7FC0023D8FD /* products.json */; };
+		E2B034FA2CA335C70023D8FD /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B034F92CA335C00023D8FD /* CategoryView.swift */; };
 		E2C243D12C6351C600461B2B /* AMARANTApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C243D02C6351C600461B2B /* AMARANTApp.swift */; };
 		E2C243D32C6351C600461B2B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C243D22C6351C600461B2B /* ContentView.swift */; };
 		E2C243D52C6351C800461B2B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2C243D42C6351C800461B2B /* Assets.xcassets */; };
@@ -59,6 +62,9 @@
 
 /* Begin PBXFileReference section */
 		E225DADF2C90708100A28025 /* FavoriteProductsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteProductsView.swift; sourceTree = "<group>"; };
+		E2B034F32CA28F580023D8FD /* ProductResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductResponse.swift; sourceTree = "<group>"; };
+		E2B034F52CA2D7FC0023D8FD /* products.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = products.json; sourceTree = "<group>"; };
+		E2B034F92CA335C00023D8FD /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		E2C243CD2C6351C600461B2B /* AMARANT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AMARANT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2C243D02C6351C600461B2B /* AMARANTApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AMARANTApp.swift; sourceTree = "<group>"; };
 		E2C243D22C6351C600461B2B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -142,6 +148,7 @@
 		E2C243CF2C6351C600461B2B /* AMARANT */ = {
 			isa = PBXGroup;
 			children = (
+				E2B034F52CA2D7FC0023D8FD /* products.json */,
 				E2C243D02C6351C600461B2B /* AMARANTApp.swift */,
 				E2C243FA2C6351D600461B2B /* Models */,
 				E2C244072C63538000461B2B /* Views */,
@@ -181,6 +188,7 @@
 		E2C243FA2C6351D600461B2B /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E2B034F32CA28F580023D8FD /* ProductResponse.swift */,
 				E2C243FB2C6351F900461B2B /* Banner.swift */,
 				E2C243FD2C63522100461B2B /* CartItem.swift */,
 				E2C243FF2C63525000461B2B /* Category.swift */,
@@ -202,6 +210,7 @@
 				E2C244132C63558300461B2B /* CartView.swift */,
 				E2C244152C63558D00461B2B /* CatalogView.swift */,
 				E2C244172C6355A600461B2B /* CategoryCard.swift */,
+				E2B034F92CA335C00023D8FD /* CategoryView.swift */,
 				E2C244192C63579200461B2B /* HomeView.swift */,
 				E2C2441B2C6357B600461B2B /* PopularProductView.swift */,
 				E2C2441D2C6357D000461B2B /* ProductCard.swift */,
@@ -327,6 +336,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2B034F62CA2D8050023D8FD /* products.json in Resources */,
 				E2C243D82C6351C800461B2B /* Preview Assets.xcassets in Resources */,
 				E2C243D52C6351C800461B2B /* Assets.xcassets in Resources */,
 			);
@@ -368,12 +378,14 @@
 				E2C243D12C6351C600461B2B /* AMARANTApp.swift in Sources */,
 				E2C244262C64AF1D00461B2B /* SelectStoreView.swift in Sources */,
 				E2C244242C6390E700461B2B /* example_test.swift in Sources */,
+				E2B034F42CA28F680023D8FD /* ProductResponse.swift in Sources */,
 				E2C244282C64B04B00461B2B /* CityAndStore.swift in Sources */,
 				E2F2F4B02C808D7200A7647D /* ServerDataModel.swift in Sources */,
 				E2C244062C6352BB00461B2B /* User.swift in Sources */,
 				E2C244142C63558400461B2B /* CartView.swift in Sources */,
 				E2C244092C6353C000461B2B /* BannerView.swift in Sources */,
 				E2C243FE2C63522100461B2B /* CartItem.swift in Sources */,
+				E2B034FA2CA335C70023D8FD /* CategoryView.swift in Sources */,
 				E2C243FC2C6351F900461B2B /* Banner.swift in Sources */,
 				E2C244042C63527A00461B2B /* Product.swift in Sources */,
 				E2C2441E2C6357D000461B2B /* ProductCard.swift in Sources */,
@@ -550,7 +562,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -560,7 +572,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -580,7 +592,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -590,7 +602,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

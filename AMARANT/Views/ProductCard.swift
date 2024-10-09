@@ -71,7 +71,7 @@ struct ProductCard: View {
                             Text(product.name)
                                 .bold()
                             HStack {
-                                Text("\(product.price)")
+                                Text(String(format: "%.2f", product.price))
                                     .font(.subheadline)
                                 Image(systemName: "tengesign")
                                     .resizable()

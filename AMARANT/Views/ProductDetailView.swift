@@ -30,7 +30,7 @@ struct ProductDetailView: View {
                             }
                             HStack {
                                 Spacer()
-                                // добавить в избранное
+                                // кнопка добавить в избранное
                                 ProductAddToFavButton(favouriteManager: favouriteManager, product: product, circleSize: 40, imageSize: 26)
                             }
                             .padding(.trailing, 10)
@@ -76,7 +76,7 @@ struct MenuDescriptionDetailProduct: View {
                         .shadow(radius: 5)
                     // ценник
                     HStack {
-                        Text("\(product.price)")
+                        Text(String(format: "%.2f", product.price))
                             .font(.title)
                             .bold()
                         Image(systemName: "tengesign")
